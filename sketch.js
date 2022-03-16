@@ -1,5 +1,4 @@
 const queryString = window.location.search;
-
 const urlParams = new URLSearchParams(queryString);
 
 const imageUrl = urlParams.get("image");
@@ -10,6 +9,7 @@ let tiles;
 let cols;
 let rows;
 let w, h;
+let hasWon = false;
 // Loading the image
 function preload() {
   if (imageUrl == null) {
@@ -55,24 +55,46 @@ function setup() {
 
 function draw() {
   background(0);
-  // Draw the current board
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      let tile = tiles[i][j];
-      if (tile.index > -1) {
-        let img = tile.img;
-        image(img, i * w, j * h, w, h);
+  if (!hasWon) {
+    // Draw the current board
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        let tile = tiles[i][j];
+        if (tile.index > -1) {
+          let img = tile.img;
+          image(img, i * w, j * h, w, h);
+        }
       }
     }
-  }
 
-  // Show it as grid
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      strokeWeight(2);
-      noFill();
-      rect(i * w, j * h, w, h);
+    // Show it as grid
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        strokeWeight(2);
+        noFill();
+        rect(i * w, j * h, w, h);
+      }
     }
+
+    let current_tile = 0;
+    let maxTile = cols * rows - 1;
+    let incorrect = false;
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        let tile = tiles[i][j];
+        if (current_tile != tile.index && current_tile < maxTile) {
+          incorrect = true;
+        }
+        current_tile++;
+      }
+    }
+    if (!incorrect) {
+      hasWon = true;
+    }
+  } else {
+    textSize(32);
+    text("You WON!", 120, 200);
+    fill(255);
   }
 }
 
