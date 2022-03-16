@@ -12,8 +12,11 @@ let rows;
 let w, h;
 // Loading the image
 function preload() {
-  if (imageUrl == null) source = loadImage("bmo.jpg");
-  else source = loadImage(imageUrl);
+  if (imageUrl == null) {
+    source = loadImage("bmo.jpg");
+  } else {
+    source = loadImage(imageUrl);
+  }
 
   if (columns == null) cols = 4;
   else cols = columns;
@@ -30,6 +33,8 @@ function setup() {
   let index = 0;
 
   tiles = new Array(cols);
+
+  source.resize(400, 400);
 
   // Chop up source image into tiles
   for (let i = 0; i < cols; i++) {
@@ -83,7 +88,7 @@ function swap(i, j, a, b) {
 function mousePressed() {
   let i = floor(mouseX / w);
   let j = floor(mouseY / h);
-  if (i > cols - 1 || j > rows - 1) return;
+  if (i > cols - 1 || j > rows - 1 || i < 0 || j < 0) return;
   move(i, j);
 }
 
@@ -132,4 +137,20 @@ function shuffle_tiles() {
     let b = floor(random() * (rows - 1));
     swap(i, j, a, b);
   }
+}
+
+function SubmitCustomData() {
+  let query = "";
+
+  let img_box = window.document.getElementById("img_box");
+  let cols_box = window.document.getElementById("cols_box");
+  let rows_box = window.document.getElementById("rows_box");
+
+  if (img_box.value != "") query += "image=" + img_box.value + "&";
+
+  if (cols_box.value != "") query += "cols=" + cols_box.value + "&";
+
+  if (rows_box.value != "") query += "rows=" + rows_box.value;
+
+  window.location.href = "index.html?" + query;
 }
